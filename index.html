@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="scss/style.css">
+    <title>Music</title>
+</head>
+<body>
+
+
+    <div class="main_header">
+        <div class="music_container">
+            <input type="range" min="0" max="1" step="0.1"/>
+            <h2 id="title">Dhadak</h2>
+            <h3 id="singers">Arijit Singh</h3>
+            <div class="img_container">
+               <img src="img/Dhadak title track.jpg"> 
+              
+           
+            </div>
+
+            <!-- <audio src="music/1.mp3" controls></audio> -->
+             <audio src="music/Dhadak title track.mp3"></audio>
+
+             <!-- progress bar -->
+             <div class="progressbar_container" id="progressbar">
+                 <div class="progressbar_meter_duration">
+                     <div id="current_time">0.00</div>
+                     <div id="duration">04:03</div>
+                 </div>
+                 <div class="progress_div" id="progess_div">
+                     <div class="progress" id="progress"></div>
+                 </div>
+             </div>
+           
+
+            <!-- controls -->
+            <div class="music_controls">
+                <i class="fa fa-backward" aria-hidden="true" id="previus" title="Previous"></i>
+                <i class="fa fa-play main_buttons" aria-hidden="true" id="play" title="Play" ondblclick="pausemusic()"></i>
+                <i class="fa fa-forward" aria-hidden="true" id="next" title="Next"></i>
+            </div>
+
+         
+
+           
+        </div>
+    </div>
+    
+
+    <script>
+      
+      const music = document.querySelector('audio')
+     const play = document.getElementById('play');
+     const img = document.querySelector('img');
+     const previus = document.getElementById('previus');
+     const next = document.getElementById('next');
+     const title = document.getElementById('title');
+     const artiest = document.getElementById('singers');
+
+     let progress = document.getElementById('progress');
+     let current_time = document.getElementById('current_time');
+    let durations = document.getElementById('duration');
+    const progess_div = document.getElementById('progess_div');
+
+     const songs = [
+         {
+         name: "Dhadak title track",
+         title: "Dhadak",
+         artiest: "Arijit singh" 
+     },
+     {
+        name: "Humko Pyar Hua",
+         title: "Ready",
+         artiest: "Arijit singh" 
+     },
+    {
+        name: "Hawa Banke",
+         title: "Album",
+         artiest: "Darshan Raval" 
+    }
+     ]
+
+     let isplaying = false;
+    
+    //  play functions
+    //  play.addEventListener('click', function(){
+    //     let isplaying = true;
+    //     music.play();
+    //     play.classList.replace("fa-play","fa-pause");
+    //     img.classList.add("animate");
+    //  });
+
+  const playmusic = () => {
+        let isplaying = true;
+        music.play();
+        play.classList.replace("fa-play","fa-pause");
+        img.classList.add("animate");
+  }
+
+    //  pause functions
+    //  play.addEventListener('click', function(){
+    //     let isplaying = false;
+    //     music.play();
+    //     play.classList.replace("fa-play","fa-pause");
+    //     img.classList.add("animate");
+    //  });
+
+   const pausemusic = () => {
+        let isplaying = false;
+        music.pause();
+        play.classList.replace("fa-pause","fa-play");
+        img.classList.remove("animate");
+   }
+
+
+     play.addEventListener('click', () => {
+    //  if(isplaying == true){
+    //     pausemusic();
+    //  }
+    //  else{
+    //      playmusic();
+    //  }
+
+    // isplaying ? pausemusic() : playmusic();
+
+     playmusic();
+     });
+
+    //  changing songs
+
+    const loadsongs = (songs) => {
+    title.textContent = songs.title;
+   artiest.textContent = songs.artiest;
+//    music.src = "music/" + songs.name + ".mp3";
+   music.src = `music/${songs.name}.mp3`;
+   img.src = `img/${songs.name}.jpg`;
+    };
+
+    // loadsongs(songs[2]);
+    songindex = 0;
+
+    const nextsongs = () => {
+    //  songindex++;
+    songindex = (songindex + 1) % songs.length;
+  loadsongs(songs[songindex]);
+  playmusic();
+ }
+
+ const presongs = () => {
+    //  songindex++;
+    songindex = (songindex - 1 + songs.length) % songs.length;
+  loadsongs(songs[songindex]);
+  playmusic();
+ }
+
+ 
+//  progress_js
+
+music.addEventListener('timeupdate', (event) => {
+// console.log(event);
+const {currentTime, duration} = event.srcElement;
+// console.log(currentTime);
+// console.log(duration);
+
+// progressbar_width
+let progress_time = (currentTime / duration * 100);
+progress.style.width = `${progress_time}%`
+
+
+// music duration update
+// console.log(duration);
+
+let min_duration = Math.floor(duration / 60);
+let sec_duration = Math.floor(duration % 60);
+console.log(min_duration);
+console.log(sec_duration);
+
+if(sec_duration < 10){
+    sec_duration= `0${sec_duration}`;
+}
+
+total_duration = `${min_duration}:${sec_duration}`;
+
+// durations.textContent = `${total_duration}`;
+// durations.textContent = total_duration;
+if(duration){
+    durations.textContent = total_duration;
+}
+
+// current duration update
+
+let min_currentTime = Math.floor(currentTime / 60);
+let sec_currentTime = Math.floor(currentTime % 60);
+// console.log(min_duration);
+// console.log(sec_duration);
+// total_currentTime = `${min_currentTime}:${sec_currentTime}`;
+
+// durations.textContent = `${total_duration}`;
+// durations.textContent = total_duration;
+
+if(sec_currentTime < 10){
+    sec_currentTime = `0${sec_currentTime}`;
+}
+total_currentTime = `${min_currentTime}:${sec_currentTime}`;
+
+    current_time.textContent = `${total_currentTime}`;
+
+});
+
+// progress onclick functionality
+
+progess_div.addEventListener('click', (event) => {
+    // console.log(event);
+    const {currentTime, duration} = music;
+    // const duration = music.duration;
+    
+    let change_progress = (event.offsetX / event.srcElement.clientWidth) * duration;
+    console.log(duration);
+    console.log(change_progress);
+    
+    music.currentTime = change_progress;
+});
+
+
+
+music.addEventListener('ended', nextsongs);
+  
+    next.addEventListener('click', nextsongs);
+    previus.addEventListener('click', presongs);
+
+
+    $(document).ready(function() {
+    $("#play").click(function(){
+        $(this).parent("div").find("audio").trigger('play');    
+    });
+
+    $(".music_container input[type='range']").on("input", function(){
+        $(this).parent("div").find("audio")[0].volume = this.value;
+    });
+});
+
+
+
+
+    </script>
+
+    <script>
+   
+
+
+
+    </script>
+
+</body>
+</html>
